@@ -10,9 +10,40 @@
     <link rel="stylesheet" href="../../static/style.css">
 <!--     <link rel="stylesheet" href="../../static/timeline_style.css"> -->
     <title>{% block title %}{% endblock %}</title>
+    <style>
+      body {
+          background-color: #FAFAFA;
+      }
+      .container {
+          background-color: #FAFAFA;
+          width: 1000px;
+          padding-left: 50px;
+      }
+      hr {
+        border: none;
+        height: 2.5px;
+        /* Set the hr color */
+        color: #b0d3e6; /* old IE */
+        background-color: #696969; /* Modern Browsers */
+    }
+    h1{
+      font-family: 'Shadows Into Light', cursive;
+    }
+    .bd-calloutFilter{
+        background-color: white;
+        padding:1.25rem;
+        margin-top:1.25rem;
+        margin-bottom:1.25rem;
+        border:1px solid #eee;
+        border-top-width:.25rem;
+        border-radius:.25rem;
+        border-top-color:black
+      }
+    </style>
 </head>
 
 <body>
+
     <div class="container">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <a class="navbar-brand" href="{% url 'home' %}">OLLII</a>
@@ -20,7 +51,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
+            <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'vocabulary' %}">Vocabulary </a>
                 </li>
@@ -34,10 +65,7 @@
                     <a class="nav-link" href="{% url 'later' %}">Later</a>
                 </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
+            
         </div>
     </nav>
     <div>
