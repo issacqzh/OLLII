@@ -13,3 +13,6 @@ def help4mom(request):
 
 def vocabulary(request):
 	return render(request,'html_sites/vocabulary.html')
+
+def later(request):
+	return render(request,'html_sites/later.html')
