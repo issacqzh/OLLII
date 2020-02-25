@@ -1,5 +1,5 @@
 .jumbotron{
-	background-color: #fff;
+	background-color: #FAFAFA;
 	margin-bottom: 0;
 	padding: 2rem 2rem;
 }
@@ -31,7 +31,9 @@ color:#fff;
 .main-color{
 	background: #578ed6;
 }
-
+.card{
+  background-color: #FAFAFA;
+}
 
 
 .cd-horizontal-timeline ol, .cd-horizontal-timeline ul {
