@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 
@@ -8,44 +9,22 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="../../static/style.css">
-<!--     <link rel="stylesheet" href="../../static/timeline_style.css"> -->
+<!-- <link rel="stylesheet" href="../../static/timeline_style.css">  -->
     <title>{% block title %}{% endblock %}</title>
-    <style>
-      body {
-          background-color: #F3F0EF;
-      }
-      .container {
-          background-color: #FAFAFA;
-          width: 1000px;
-          height:100%;
-          
-          padding-bottom: 100%;
-      }
-      hr {
-        border: none;
-        height: 2.5px;
-        /* Set the hr color */
-        color: #b0d3e6; /* old IE */
-        background-color: #696969; /* Modern Browsers */
-    }
-    
-    .bd-calloutFilter{
-        background-color: white;
-        padding:1.25rem;
-        margin-top:1.25rem;
-        margin-bottom:1.25rem;
-        border:1px solid #eee;
-        border-top-width:.25rem;
-        border-radius:.25rem;
-        border-top-color:black
-      }
-    </style>
+
+
+  <link rel="canonical" href="https://getbootstrap.com/docs/4.4/examples/carousel/">
+
+
+
+
+
 </head>
 
 <body>
 
-    <div class="container">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+ 
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary" style="margin-left:auto;margin-right: auto;width:1000px;">
         <a class="navbar-brand" href="{% url 'home' %}">OLLII</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -68,9 +47,11 @@
             
         </div>
     </nav>
-    <div>
+
+
+<div class="container" style="width: 1000px;"> 
         {% block content %}{% endblock %}
-    </div>
+
 </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

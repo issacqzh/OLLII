@@ -1,17 +1,25 @@
 .jumbotron{
-	background-color: #FAFAFA;
-	margin-bottom: 0;
-	padding: 2rem 2rem;
+  background-color: #FAFAFA;
+  
 }
 
 .btn-outline-success{
-	color:#fff;
-	border-color: #fff;
+  color:#fff;
+  border-color: #fff;
 
 }
 #navbarSupportedContent > form > button:hover{
-	color:#000;
-	background: #fff;
+  color:#000;
+  background: #fff;
+}
+
+ body,html{
+          background-color: #F3F0EF;
+       
+      }
+body{
+  display: flex;
+  flex-direction: column;
 }
 
 #navbarSupportedContent > ul > li > a:hover{
@@ -20,16 +28,25 @@ color:#fff;
 
 
 }
+
+
+
+.container {
+          background-color: #FAFAFA;
+     flex-grow: 1;  
+  
+
+      }
 .heading{
-	font-size: 20px;
+  font-size: 20px;
 }
 
 .top{
-	padding:4rem 0;
-	width:100%;
+  padding:4rem 0;
+  width:100%;
 }
 .main-color{
-	background: #578ed6;
+  background: #578ed6;
 }
 .card{
   background-color: #FAFAFA;
@@ -446,10 +463,22 @@ color:#fff;
     margin-left: -1.5px;
     background-color: #eeeeee;
 }
+    .bd-calloutFilter{
+        background-color: white;
+        padding:1.25rem;
+        margin-top:1.25rem;
+        margin-bottom:1.25rem;
+        border:1px solid #eee;
+        border-top-width:.25rem;
+        border-radius:.25rem;
+        border-top-color:black
+      }
 
 html,
 body {
   overflow-x: hidden; /* Prevent scroll on narrow devices */
+  height:100%;
+  background-color: #F3F0EF;
 }
 ​
 body {
@@ -522,7 +551,7 @@ body {
 ​
 .border-bottom { border-bottom: 1px solid #e5e5e5; }
 ​
-.box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
+.box-shadow { box-shadow: 0 .75rem .75rem rgba(0, 0, 0, .05); }
 ​
 .lh-100 { line-height: 1; }
 .lh-125 { line-height: 1.25; }
