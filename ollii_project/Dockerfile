@@ -16,7 +16,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # set project environment variables
 # grab these via Python's os.environ
 # these are 100% optional here
-ENV PORT=8888
+ENV PORT=8000
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -38,5 +38,6 @@ RUN pip3 install pipenv
 # Install project dependencies
 RUN pipenv install --skip-lock --system --dev
 
-EXPOSE 8888
+
+EXPOSE 8000
 CMD gunicorn ollii_project.wsgi:application --bind 0.0.0.0:$PORT

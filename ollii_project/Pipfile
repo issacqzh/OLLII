@@ -9,6 +9,7 @@ verify_ssl = true
 django = "*"
 gunicorn = "*"
 pymed = "*"
+whitenoise = "*"
 
 [requires]
 python_version = "3.6"

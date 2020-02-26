@@ -24,7 +24,7 @@ SECRET_KEY = '9b30s*e(^0w631#vc6^ab++r+*$u@i)!licej(1mwu&k7l^#ct'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-# DEBUG = True
+# DEBUG = False
 DEBUG=int(os.environ.get('DEBUG',default=1))
 ALLOWED_HOSTS = []
 
@@ -126,6 +126,13 @@ TEMPLATE_DIRS = (
 STATICFILES_DIRS = (
      os.path.join(BASE_DIR, 'static'),
 )
-STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATIC_URL = '/static/'
+
+
+MIDDLEWARE = [
+  'django.middleware.security.SecurityMiddleware',
+  'whitenoise.middleware.WhiteNoiseMiddleware',
+  # ...
+]
