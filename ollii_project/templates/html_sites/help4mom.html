@@ -1,0 +1,42 @@
+{% extends "html_sites/base.html" %}
+
+{% block title %}help4mom{% endblock %}
+{% block content %}
+
+<center>
+ <div class="btn-group mt-5" role="group" aria-label="First group">
+   <form  method="GET" id="search1">
+      <button class="btn btn-outline-primary mx-5 rounded" style="width:150px; height:50px; font-size:12px;" id = "stage1" name = "stage1" type="submit">ANTEPARTUM PERIOD</button>
+      <button class="btn btn-outline-primary mx-5 rounded" style="width:150px; height:50px; font-size:12px;" id = "stage2" name = "stage2" type="submit">INTRAPARTUM PERIOD</button>
+      <button class="btn btn-outline-primary mx-5 rounded" style="width:150px; height:50px; font-size:12px;" id = "stage3" name = "stage3" type="submit">POSTPARTUM PERIOD</button>
+    </form>
+  </div>
+  </center>
+
+  <div name = "results_here" id ="getresults">
+
+    {% if results %}
+    <div class="my-3 p-3 bg-white shadow-lg rounded bg-green">
+      <h6 class="border-gray pb-2 mb-0">Stage: {{ stage }}</h6>
+      <h6 class="border-gray pb-2 mb-0">Issued Query: {{ query }}</h6>
+    </div>
+    {% endif %}
+
+    {% for result in results %}
+        <div class="my-3 p-3 bg-white rounded box-shadow bg-green">
+          <h6 class="border-bottom border-gray pb-2 mb-0">{{ result.title }}</h6>
+          <div class="media text-muted pt-3">
+            <p class="media-body pb-3 mb-0 small lh-125">
+              <font style="font-size:16px;">{{ result.abstract|safe }}</font>
+            </p>
+          </div>
+        </div>
+    {% endfor %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  </div>
+
+
+
+{% endblock content %}
+
