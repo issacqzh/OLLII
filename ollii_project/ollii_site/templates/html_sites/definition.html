@@ -1,0 +1,31 @@
+{% extends "html_sites/base.html" %}
+{% block title %}Search{% endblock %}
+{% block content %}
+<div class="pricing-header pt-md-5 mx-auto text-center">
+    <h4>Term Definition</h4>
+</div>
+<center>
+    <form class="input-group col-sm-6 mt-3 align-items-center">
+        <input class="form-control amber-border" type="search" placeholder="Input your word here" name="term" aria-label="Search">
+        <button class="btn btn-outline-primary ml-2" type="submit">Search</button>
+    </form>
+</center>
+{% if definition %}
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">{{ term }}</h5>
+        <p class="card-text">{{ definition }}</p>
+    </div>
+</div>
+{% endif %}
+{% for relate in related %}
+<div class="card mt-4 bg-light">
+    <div class="card-header">
+        {{ relate}}
+    </div>
+    <div class="mx-2 my-2">
+        {{result}}
+    </div>
+</div>
+{% endfor %}
+{% endblock content %}

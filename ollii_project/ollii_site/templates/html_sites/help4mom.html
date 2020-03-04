@@ -1,42 +1,71 @@
 {% extends "html_sites/base.html" %}
-
 {% block title %}help4mom{% endblock %}
+{% load static %}
 {% block content %}
-
-<center>
- <div class="btn-group mt-5" role="group" aria-label="First group">
-   <form  method="GET" id="search1">
-      <button class="btn btn-outline-primary mx-5 rounded" style="width:150px; height:50px; font-size:12px;" id = "stage1" name = "stage1" type="submit">ANTEPARTUM PERIOD</button>
-      <button class="btn btn-outline-primary mx-5 rounded" style="width:150px; height:50px; font-size:12px;" id = "stage2" name = "stage2" type="submit">INTRAPARTUM PERIOD</button>
-      <button class="btn btn-outline-primary mx-5 rounded" style="width:150px; height:50px; font-size:12px;" id = "stage3" name = "stage3" type="submit">POSTPARTUM PERIOD</button>
+<div class="pricing-header pt-md-5 mx-auto text-center">
+    <h4> Help4Mom</h4>
+</div>
+<div class='text-center'>
+    <img class='mt-3' src="{% static 'img/pregnancy.jpg' %}" usemap="#planetmap" style='height:200px;width:549px;'>
+    <map name="planetmap">
+        <area shape="rect" coords="0,0,61,200" href="?term=First Trimester" alt="one">
+        <area shape="rect" coords="61,0,122,200" href="?term=First Trimester" alt="two">
+        <area shape="rect" coords="122,0,183,200" href="?term=First Trimester" alt="three">
+        <area shape="rect" coords="183,0,244,200" href="?term=Second Trimester" alt="four">
+        <area shape="rect" coords="244,0,305,200" href="?term=Second Trimester" alt="five">
+        <area shape="rect" coords="305,0,366,200" href="?term=Second Trimester" alt="six">
+        <area shape="rect" coords="366,0,427,200" href="?term=Third Trimester" alt="seven">
+        <area shape="rect" coords="427,0,488,200" href="?term=Third Trimester" alt="eight">
+        <area shape="rect" coords="488,0,549,200" href="?term=Third Trimester" alt="nine">
+    </map>
+</div>
+<!-- search -->
+<!-- <center>
+    <form class="input-group col-sm-6 mt-3 align-items-center">
+        <input class="form-control amber-border" type="search" name="term" placeholder="Input your word here" aria-label="Search">
+        <button class="btn btn-outline-primary ml-2" type="submit">Search</button>
     </form>
-  </div>
-  </center>
-
-  <div name = "results_here" id ="getresults">
-
-    {% if results %}
-    <div class="my-3 p-3 bg-white shadow-lg rounded bg-green">
-      <h6 class="border-gray pb-2 mb-0">Stage: {{ stage }}</h6>
-      <h6 class="border-gray pb-2 mb-0">Issued Query: {{ query }}</h6>
-    </div>
-    {% endif %}
-
+</center>
+ -->
+{% if results %}
+<!-- show results -->
+<div name="results_here" id="getresults">
     {% for result in results %}
-        <div class="my-3 p-3 bg-white rounded box-shadow bg-green">
-          <h6 class="border-bottom border-gray pb-2 mb-0">{{ result.title }}</h6>
-          <div class="media text-muted pt-3">
-            <p class="media-body pb-3 mb-0 small lh-125">
-              <font style="font-size:16px;">{{ result.abstract|safe }}</font>
-            </p>
-          </div>
+    <div class="card mt-4 bg-light">
+        <div class="card-header">
+            {{ result.title | safe }}
         </div>
+        <div class="mx-2 my-2">
+            {{ result.summary | safe }}
+        </div>
+    </div>
     {% endfor %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
-  </div>
-
-
-
+    <!-- pagination -->
+    {% if results.has_other_pages %}
+    <ul class="pagination justify-content-center" style="margin:0;">
+        {% if results.has_previous %}
+        <li class="page-item"><a class="page-link" href="?term={{ term }}&page={{ results.previous_page_number }}" aria-label="Previous"><span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span></a></li>
+        {% else %}
+        <li class="disabled page-item"><span class="page-link">&laquo;</span><span class="sr-only">Previous</span></a></li>
+        </li>
+        {% endif %}
+        {% for i in results.paginator.page_range %}
+        {% if results.number == i %}
+        <li class="active page-item"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+        {% else %}
+        <li class="page-item"><a class="page-link" href="?term={{ term }}&page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+        {% endfor %}
+        {% if results.has_next %}
+        <li class="page-item"><a class="page-link" href="?term={{ term }}&page={{ results.next_page_number }}"><span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span></a></li>
+        {% else %}
+        <li class="page-item disabled"><span class="page-link" aria-hidden="true">&raquo;</span><span class="sr-only">Next</span></a></li>
+        </li>
+        {% endif %}
+    </ul>
+    {% endif %}
+</div>
+{% endif %}
 {% endblock content %}
-

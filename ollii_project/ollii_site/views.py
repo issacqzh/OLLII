@@ -1,61 +1,133 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from pymed import PubMed
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+import urllib.request
+import requests
+from xml.etree import ElementTree
+import time
 # Create your views here.
+# 
 
-pubmed = PubMed(tool="MyTool", email="my@email.address")
-
-def home(request):
-	return render(request,'html_sites/home.html')
-
-def about(request):
-	return render(request,'html_sites/about.html')
-
-# def help4mom(request):
-# 	return render(request,'html_sites/help4mom.html')
 
 def vocabulary(request):
 	return render(request,'html_sites/vocabulary.html')
+def about(request):
+    return render(request,'html_sites/about.html')
 
-def later(request):
-	return render(request,'html_sites/later.html')
 
 
 
 def help4mom(request):
-    if "stage1" in request.GET:
-        print("antepartum")
-        q = "antepartum prenatal"
-        stage = "Antepartum"
-    elif "stage2" in request.GET:
-        print("intrapartum")
-        q = "intrapartum labor and delivery management"
-        stage = "Intrapartum"
-    elif "stage3" in request.GET:
-        print("postpartum")
-        q = "postpartum"
-        stage = "Postpartum"
+
+    if 'term' in request.GET:
+        print('search')
     else:
         return render(request,'html_sites/help4mom.html',{})
 
-    pubmed_results = pubmed.query(q, max_results=20)
-    f_results = []
+    address='https://wsearch.nlm.nih.gov/ws/query?db=healthTopics&term='
 
-    for result in pubmed_results:
-        dict_result = result.toDict()
-        f_results.append(dict_result)
+    response = requests.get(address+request.GET.get('term')+'&retmax=35')
+    tree = ElementTree.fromstring(response.content)
+    f_results=[]
+    for result in tree.find('list'):
+        # url
+        link=result.attrib['url']
+        for row in result:
+            if row.attrib['name'] == 'title':
+                title=row.text
+                continue
+            if row.attrib['name'] == 'FullSummary':
+                
+                summary=row.text
+                continue
+        f_results.append({'url':link,'title':title,'summary':summary})
 
-    paginator = Paginator(f_results, 20)
-    page = request.GET.get('page',1)
-    queryset_list = paginator.page(page)
+    paginator=Paginator(f_results,5)
+    page=request.GET.get('page',1)
+    queryset_list=paginator.page(page)
 
     context = {
-		"results": queryset_list,
-		"title": "Pub Med Results",
-        "stage": stage,
-        "query": q,
-	}
+        'results': queryset_list,
+        'term': request.GET.get('term'),
+        'pages': paginator.page_range
+    }
 
-    print("Context:"+str(context))
     return render(request,'html_sites/help4mom.html',context)
+
+
+def implementor(request):
+    return render(request,'html_sites/implementor.html',{})
+
+
+
+
+
+def definition(request):
+    return render(request,'html_sites/definition.html',{})
+    # if 'term' in request.GET:
+    #     print('s')
+    # else:
+    #     return render(request,'html_sites/search.html',{})
+
+    # basic_address='https://eutils.ncbi.nlm.nih.gov/entrez/eutils/'
+    # search_address='esearch.fcgi?db=mesh&retmax=100&term='
+    # summary_address='esummary.fcgi?db=mesh&retmax=100&id='
+    # id_results=[]
+    # with requests.Session() as s:
+
+    #     response = s.get(basic_address+search_address+request.GET.get('term'))
+    #     tree = ElementTree.fromstring(response.content)
+    #     for result in tree.find('IdList'):
+    #         id_results.append(result.text)
+    #     s.close()
+    
+    # final_id=None
+    # final_term=None
+    # with requests.Session() as s:
+    #     for i in range(len(id_results)):
+            
+    #         response=s.get(basic_address+summary_address+id_results[i])
+    #         print(len(id_results))
+    #         print(id_results[i])
+    #         print(response.content)
+    #         tree=ElementTree.fromstring(response.content)
+    #         for item in tree[0].findall('Item'):
+    #             if item.attrib['Name']=="DS_MeshTerms":
+    #                 for mesh in item:
+    #                     if mesh.text.lower() == request.GET.get('term').lower():
+    #                         final_id=id_results[i]
+    #                         final_term = mesh.text
+    #                         break
+            
+    #         time.sleep(1)
+    #         if i >2: break
+    #     s.close()
+    # if final_id is None:
+    #     print("None")
+    # else:
+    #     with requests.Session() as s:
+    #         result_response=s.get(basic_address+summary_address+final_id)
+    #         tree = ElementTree.fromstring(result_response.content)
+    #         related=[]
+    #         for item in tree[0].findall('Item'):
+    #             if item.attrib['Name'] == "DS_ScopeNote":
+    #                 definition= item.text
+    #             elif item.attrib['Name']=="DS_SeeRelated":
+    #                 for row in item:
+    #                     related.append(row.text)
+    #             elif item.attrib['Name']=="DS_IdxLinks":
+    #                 for linked_tree in item:
+    #                     for tree_item in linked_tree:
+    #                         if tree_item.attrib['Name'] == "Parent":
+    #                             related.append(tree_item.text)
+    #                         elif tree_item.attrib['Name'] == "Children":
+    #                             for child in tree_item:
+    #                                 related.append(child.text)
+    #                         else:
+    #                             continue    
+    #         context={'term':final_term,'definition':definition, 'related':related}
+    #         s.close()
+    # return render(request,'html_sites/search.html',context)   
+
+        
+
