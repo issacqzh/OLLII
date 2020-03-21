@@ -14,6 +14,8 @@ def vocabulary(request):
 def about(request):
     return render(request,'html_sites/about.html')
 
+def home(request):
+    return render(request,'html_sites/home.html')
 
 
 

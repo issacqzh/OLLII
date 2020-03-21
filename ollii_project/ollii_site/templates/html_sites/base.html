@@ -14,30 +14,28 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container d-flex flex-column">
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-            <a class="navbar-brand" href="{% url 'help4mom' %}">OLLII</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'vocabulary' %}">Vocabulary </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'implementor' %}">Implementor Search</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'definition' %}">Definition</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'about' %}">About</a>
-                    </li>
-                </ul>
+            <a class="nav-link text-light navbar-brand" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="navbar-toggler-icon text"></span>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="{% url 'help4mom' %}">Help4Mom</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{% url 'implementor' %}">Implementor</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{% url 'definition' %}">Definition</a>
             </div>
         </nav>
         {% block content %}{% endblock %}
+        <footer class="mt-auto text-muted font-weight-bold text-center text-small">
+            <ul class="list-inline my-1">
+                <li class="list-inline-item"><a href="{% url 'home' %}" class= "text-muted">Home</a></li>
+                <li class="list-inline-item"><a href="{% url 'about' %}" class= "text-muted">About</a></li>
+                <li class="list-inline-item"><a href="mailto: asandeep@live.unc.edu" class= "text-muted">Contact Us</a></li>
+            </ul>
+            <p>Copyright &copy; 2020 OLLII</p>
+        </footer>
     </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

@@ -6,7 +6,7 @@
     <h4> Help4Mom</h4>
 </div>
 <div class='text-center'>
-    <img class='mt-3' src="{% static 'img/pregnancy.jpg' %}" usemap="#planetmap" style='height:340px;width:800px;'>
+    <img class='mt-3 img-fluid' src="{% static 'img/pregnancy.jpg' %}" usemap="#planetmap" style='height:340px;width:800px;'>
     <map name="planetmap">
         <area shape="rect" coords="0,0,260,340" href="?term=First Trimester" alt="one">
         <area shape="rect" coords="260,0,460,340" href="?term=Second Trimester" alt="two">
@@ -37,8 +37,8 @@
     </div>
     {% endfor %}
     <!-- pagination -->
-    {% if results.has_other_pages %}
-    <ul class="pagination justify-content-center" style="margin:0;">
+   
+    <ul class="pagination justify-content-center mt-3" >
         {% if results.has_previous %}
         <li class="page-item"><a class="page-link" href="?term={{ term }}&page={{ results.previous_page_number }}" aria-label="Previous"><span aria-hidden="true">&laquo;</span>
                 <span class="sr-only">Previous</span></a></li>
@@ -61,7 +61,7 @@
         </li>
         {% endif %}
     </ul>
-    {% endif %}
+   
 </div>
 {% endif %}
 {% endblock content %}
