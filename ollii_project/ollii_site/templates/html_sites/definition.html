@@ -10,15 +10,22 @@
         <button class="btn btn-outline-primary ml-2" type="submit">Search</button>
     </form>
 </center>
+
 {% if definition %}
-<div class="card">
+
+<div class="card mt-4 bg-light">
+    <div class="card-header">
+            {{ term }}
+        </div>
     <div class="card-body">
-        <h5 class="card-title">{{ term }}</h5>
-        <p class="card-text">{{ definition }}</p>
+        
+        <p class="card-text">Defintion: {{ definition }}</p>
+        <p class="card-text">Related Terms: {% for relate in related %}<a class="mr-1" id="related" href="{% url 'definition' %}?term={{relate}}" style="color:#212529"><u>{{relate}}</u>  </a>{% endfor %}</p>
+        <p class="card-text">Example usage (from Wikipedia): </p>
     </div>
 </div>
 {% endif %}
-{% for relate in related %}
+<!-- {% for relate in related %}
 <div class="card mt-4 bg-light">
     <div class="card-header">
         {{ relate}}
@@ -27,5 +34,5 @@
         {{result}}
     </div>
 </div>
-{% endfor %}
+{% endfor %} -->
 {% endblock content %}

@@ -1,13 +1,21 @@
 .jumbotron{
   background-color: #FAFAFA;
-  
+  margin: 0;
 }
-body {
+body,html {
   height: 100%;
   margin:0; /* remove default margin */
   padding:0; /* remove default padding */
   width:100%; /* take full browser width */
 
+}
+
+#related > u:hover{
+  color:#007bff;
+}
+area{
+
+  outline:none;
 }
 .btn-outline-success{
   color:#fff;
@@ -23,10 +31,6 @@ body {
           background-color: #F3F0EF;
        
       }
-body{
-  display: flex;
-  flex-direction: column;
-}
 
 #navbarSupportedContent > ul > li > a:hover{
 
@@ -39,8 +43,8 @@ color:#fff;
 
 .container {
           background-color: #FAFAFA;
-          padding :0;
-
+          padding :0; 
+          min-height: 100%
   
 
       }

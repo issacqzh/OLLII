@@ -10,7 +10,9 @@ body,html {
 
 }
 
-
+#related > u:hover{
+  color:#007bff;
+}
 area{
 
   outline:none;
