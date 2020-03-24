@@ -72,8 +72,8 @@ def definition(request):
         return render(request,'html_sites/definition.html',{})
 
     basic_address='https://eutils.ncbi.nlm.nih.gov/entrez/eutils/'
-    search_address='esearch.fcgi?db=mesh&retmax=30&term='
-    summary_address='esummary.fcgi?db=mesh&retmax=30&id='
+    search_address='esearch.fcgi?db=mesh&retmax=1000&term='
+    summary_address='esummary.fcgi?db=mesh&retmax=1000&id='
     id_results=[]
     with requests.Session() as s:
 
