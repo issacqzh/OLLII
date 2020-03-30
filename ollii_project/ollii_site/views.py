@@ -105,6 +105,8 @@ def definition(request):
                             final_def=temp_def
                             break
             time.sleep(0.4)
+            if i > 2: break
+    print(final_id)
     if final_id is None:
         context={}
     else:
