@@ -6,33 +6,53 @@
 </div>
 <center>
     <form class="input-group col-sm-6 mt-3 align-items-center">
-        <input class="form-control amber-border" type="search" placeholder="Input your word here" name="term" aria-label="Search">
+        <input class="form-control amber-border" type="search" placeholder="Input your word here" name="term" aria-label="Search" value="{{ request.GET.term }}">
         <button class="btn btn-outline-primary ml-2" type="submit">Search</button>
     </form>
 </center>
-
-{% if definition %}
-
-<div class="card mt-4 bg-light">
-    <div class="card-header">
-            {{ term }}
+{% if results %}
+<!-- show results -->
+<div name="results_here" id="getresults">
+    {% for result in results %}
+    <div class="card mt-4 bg-light">
+        <div class="card-header">
+            {{ result.term | safe }}
         </div>
-    <div class="card-body">
-        
-        <p class="card-text">Defintion: {{ definition }}</p>
-        <p class="card-text">Related Terms: {% for relate in related %}<a class="mr-1" id="related" href="{% url 'definition' %}?term={{relate}}" style="color:#212529"><u>{{relate}}</u>  </a>{% endfor %}</p>
-        <p class="card-text">Example usage (from Wikipedia): </p>
+        <div class="mx-2 my-2">
+            {{ result.definition}}
+        </div>
+        {% if result.related_terms|length > 2 %}
+                    <div class="mx-2 my-2">
+                        {{ result.related_terms}}
+                    </div>
+        {% endif %}
+
     </div>
+    {% endfor %}
+    <!-- pagination -->
+    <ul class="pagination justify-content-center mt-3" >
+        {% if results.has_previous %}
+        <li class="page-item"><a class="page-link" href="?term={{ request.GET.term }}&page={{ results.previous_page_number }}" aria-label="Previous"><span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span></a></li>
+        {% else %}
+        <li class="disabled page-item"><span class="page-link">&laquo;</span><span class="sr-only">Previous</span></a></li>
+        </li>
+        {% endif %}
+        {% for i in results.paginator.page_range %}
+        {% if results.number == i %}
+        <li class="active page-item"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+        {% else %}
+        <li class="page-item"><a class="page-link" href="?term={{ request.GET.term }}&page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+        {% endfor %}
+        {% if results.has_next %}
+        <li class="page-item"><a class="page-link" href="?term={{ request.GET.term }}&page={{ results.next_page_number }}"><span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span></a></li>
+        {% else %}
+        <li class="page-item disabled"><span class="page-link" aria-hidden="true">&raquo;</span><span class="sr-only">Next</span></a></li>
+        </li>
+        {% endif %}
+    </ul>
 </div>
 {% endif %}
-<!-- {% for relate in related %}
-<div class="card mt-4 bg-light">
-    <div class="card-header">
-        {{ relate}}
-    </div>
-    <div class="mx-2 my-2">
-        {{result}}
-    </div>
-</div>
-{% endfor %} -->
 {% endblock content %}
