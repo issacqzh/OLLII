@@ -9,6 +9,7 @@ body,html {
   width:100%; /* take full browser width */
 
 }
+#more {display: none;}
 
 #related > u:hover{
   color:#007bff;

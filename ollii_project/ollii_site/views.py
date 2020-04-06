@@ -56,7 +56,7 @@ def implementor(request):
 		print('search')
 	else:
 		return render(request,'html_sites/implementor.html',{})
-	address='http://localhost:8080/implementorsearch'
+	address='http://spring-boot-engine:8080/implementorsearch'
 	response = requests.get(address+request.GET.get('term'))
 	params  = {"query": request.GET.get('term')}
 	response = requests.get(address,params=params)
@@ -82,7 +82,8 @@ def definition(request):
 		print('search')
 	else:
 		return render(request,'html_sites/definition.html',{})
-	address='http://localhost:8080/meshterms'
+	address='http://spring-boot-engine:8080/meshterms'
+	medplus_address='https://wsearch.nlm.nih.gov/ws/query?db=healthTopics&term='
 	response = requests.get(address+request.GET.get('term'))
 	params  = {"query": request.GET.get('term')}
 	response = requests.get(address,params=params)
@@ -91,6 +92,27 @@ def definition(request):
 	search_results = response.json()
 	print(search_results)
 	queryset_list = search_results
+	for result in queryset_list:
+		medplus_response = requests.get(medplus_address+result['term']+'&retmax=35')
+		tree = ElementTree.fromstring(response.content)
+		try:
+		    medplus_result = tree.find('list')[0]
+
+		    # url
+		    link=medplus_result.attrib['url']
+		    for row in medplus_result:
+		        if row.attrib['name'] == 'title':
+		            title=row.text
+		            continue
+		        if row.attrib['name'] == 'FullSummary':
+		       		summary=row.text
+		       		val = -1
+		       		val = summary.find('</p>',val+1)
+		       		overview=summary[:val]+'...</p>'
+		       		continue
+		    result['medplus'] = {'url':link,'title':title,'overview':overview,'summary':summary}
+		except:
+			print('no medlineplus articles')
 	paginator = Paginator(queryset_list, 10)
 	page = request.GET.get('page',1)
 	queryset_list = paginator.page(page)
@@ -98,6 +120,7 @@ def definition(request):
 		"results": queryset_list,
 		"title": "implementor results",
 	}
+
 	print(context)
 	print("----hellloooo-------")
 	return render(request,'html_sites/definition.html',context)

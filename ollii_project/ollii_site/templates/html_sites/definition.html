@@ -19,13 +19,22 @@
             {{ result.term | safe }}
         </div>
         <div class="mx-2 my-2">
-            {{ result.definition}}
+            Definition: {{ result.definition}}
         </div>
         {% if result.related_terms|length > 2 %}
                     <div class="mx-2 my-2">
-                        {{ result.related_terms}}
+                      Related Terms: {% for relate in result.related_terms %}<a class="mr-1" id="related" href="{% url 'definition' %}?term={{relate}}" style="color:#212529"><u>{{relate}}</u>  </a>{% endfor %}
                     </div>
         {% endif %}
+        {% if result.medlineplus %}
+                <div class="mx-2 my-2">
+                   Summary (from MedlinePlus): {{ result.medlineplus.overview | safe }}<span id ="dots">...</span><span id="more">{{ result.medlineplus.summary | safe }}</span><button onclick="myFunction()" id = "myBtn">Read more</button>
+                </div>
+        {% endif %}
+
+
+
+
 
     </div>
     {% endfor %}
