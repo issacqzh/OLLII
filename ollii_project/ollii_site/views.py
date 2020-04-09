@@ -92,10 +92,6 @@ def definition(request):
 	search_results = response.json()
 	
 	queryset_list = search_results
-	
-
-	
-		
 
 	for i in range(len(queryset_list)):
 	
@@ -129,7 +125,7 @@ def definition(request):
 		    
 		except:
 			print('no medlineplus articles')
-	print(queryset_list)
+	
 	paginator = Paginator(queryset_list, 10)
 	page = request.GET.get('page',1)
 	queryset_list = paginator.page(page)
