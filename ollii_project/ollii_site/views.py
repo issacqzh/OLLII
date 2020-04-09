@@ -82,7 +82,7 @@ def definition(request):
 		print('search')
 	else:
 		return render(request,'html_sites/definition.html',{})
-	address='http://localhost:8080/meshterms'
+	address='http://spring-boot-engine:8080/meshterms'
 	medplus_address='https://wsearch.nlm.nih.gov/ws/query?db=healthTopics&term='
 	response = requests.get(address+request.GET.get('term'))
 	params  = {"query": request.GET.get('term')}
