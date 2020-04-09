@@ -82,23 +82,35 @@ def definition(request):
 		print('search')
 	else:
 		return render(request,'html_sites/definition.html',{})
-	address='http://spring-boot-engine:8080/meshterms'
+	address='http://localhost:8080/meshterms'
 	medplus_address='https://wsearch.nlm.nih.gov/ws/query?db=healthTopics&term='
 	response = requests.get(address+request.GET.get('term'))
 	params  = {"query": request.GET.get('term')}
 	response = requests.get(address,params=params)
-	print(response)
+	
 	response.raise_for_status()
 	search_results = response.json()
-	print(search_results)
+	
 	queryset_list = search_results
-	for result in queryset_list:
-		medplus_response = requests.get(medplus_address+result['term']+'&retmax=35')
-		tree = ElementTree.fromstring(response.content)
+	
+
+	
+		
+
+	for i in range(len(queryset_list)):
+	
+		rel_terms_string = queryset_list[i]['related_terms'][1:-1]
+
+		rel_terms=rel_terms_string.split(",")
+	
+		for j in range(len(rel_terms)):
+			rel_terms[j] = rel_terms[j][1:-1]
+		queryset_list[i]['related_terms'] = rel_terms
+		medplus_response = requests.get(medplus_address+queryset_list[i]['term']+'&retmax=1')
+		tree = ElementTree.fromstring(medplus_response.content)
 		try:
 		    medplus_result = tree.find('list')[0]
 
-		    # url
 		    link=medplus_result.attrib['url']
 		    for row in medplus_result:
 		        if row.attrib['name'] == 'title':
@@ -108,14 +120,20 @@ def definition(request):
 		       		summary=row.text
 		       		val = -1
 		       		val = summary.find('</p>',val+1)
-		       		overview=summary[:val]+'...</p>'
+		       		overview=summary[:val+4]
+		       		summary = summary[val+4:]
 		       		continue
-		    result['medplus'] = {'url':link,'title':title,'overview':overview,'summary':summary}
+		    queryset_list[i]['medplus']={'url':link,'title':title,'overview':overview,'summary':summary}
+		    # ['medplus'] = {'url':link,'title':title,'overview':overview,'summary':summary}
+		   
+		    
 		except:
 			print('no medlineplus articles')
+	print(queryset_list)
 	paginator = Paginator(queryset_list, 10)
 	page = request.GET.get('page',1)
 	queryset_list = paginator.page(page)
+
 	context = {
 		"results": queryset_list,
 		"title": "implementor results",

@@ -23,12 +23,12 @@
         </div>
         {% if result.related_terms|length > 2 %}
                     <div class="mx-2 my-2">
-                      Related Terms: {% for relate in result.related_terms %}<a class="mr-1" id="related" href="{% url 'definition' %}?term={{relate}}" style="color:#212529"><u>{{relate}}</u>  </a>{% endfor %}
+                      Related Terms: {% for relate in result.related_terms %}<a class="mr-1" id="related" href="{% url 'definition' %}?term={{relate}}" style="color:#212529"><u>{{ relate }}</u>  </a>{% endfor %}
                     </div>
         {% endif %}
-        {% if result.medlineplus %}
+        {% if result.medplus %}
                 <div class="mx-2 my-2">
-                   Summary (from MedlinePlus): {{ result.medlineplus.overview | safe }}<span id ="dots">...</span><span id="more">{{ result.medlineplus.summary | safe }}</span><button onclick="myFunction()" id = "myBtn">Read more</button>
+                   Summary (from MedlinePlus): {{ result.medplus.overview | safe }}<span class ="dots"></span><span class="more">{{ result.medplus.summary | safe }}</span><button class = "read_btn">read more</button>
                 </div>
         {% endif %}
 
@@ -38,6 +38,8 @@
 
     </div>
     {% endfor %}
+</div>
+<div>
     <!-- pagination -->
     <ul class="pagination justify-content-center mt-3" >
         {% if results.has_previous %}
