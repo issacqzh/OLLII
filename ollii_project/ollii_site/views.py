@@ -56,7 +56,7 @@ def implementor(request):
 		print('search')
 	else:
 		return render(request,'html_sites/implementor.html',{})
-	address='http://localhost:8080/implementorsearch'
+	address='http://spring-boot-engine:8080/implementorsearch'
 	response = requests.get(address+request.GET.get('term'))
 	params  = {"query": request.GET.get('term')}
 	response = requests.get(address,params=params)
@@ -82,7 +82,7 @@ def definition(request):
 		print('search')
 	else:
 		return render(request,'html_sites/definition.html',{})
-	address='http://localhost:8080/meshterms'
+	address='http://spring-boot-engine:8080/meshterms'
 	medplus_address='https://wsearch.nlm.nih.gov/ws/query?db=healthTopics&term='
 	response = requests.get(address+request.GET.get('term'))
 	params  = {"query": request.GET.get('term')}
@@ -127,7 +127,7 @@ def definition(request):
 			print('no medlineplus articles')
 	
 	for i in range(len(queryset_list)):
-		wiki_address = 'http://localhost:8080/wiki'
+		wiki_address = 'http://spring-boot-engine:8080/wiki'
 		params  = {"query": queryset_list[i]['term']}
 		response = requests.get(wiki_address,params=params)
 		response.raise_for_status()
