@@ -26,9 +26,16 @@
                       Related Terms: {% for relate in result.related_terms %}<a class="mr-1" id="related" href="{% url 'definition' %}?term={{relate}}" style="color:#212529"><u>{{ relate }}</u>  </a>{% endfor %}
                     </div>
         {% endif %}
+
+        {% if result.wiki %}
+                    <div class="mx-2 my-2">
+                      Wiki Example: {{ result.wiki.overview }}<span class ="dots">...</span><span class="more">{{ result.wiki.summary }}</span><button class = "read_btn"><a href={{ result.wiki.url }}></a>read more</button>
+                    </div>
+        {% endif %}
+
         {% if result.medplus %}
                 <div class="mx-2 my-2">
-                   Summary (from MedlinePlus): {{ result.medplus.overview | safe }}<span class ="dots"></span><span class="more">{{ result.medplus.summary | safe }}</span><button class = "read_btn">read more</button>
+                   Medline Plus: {{ result.medplus.overview | safe }}<span class ="dots"></span><span class="more">{{ result.medplus.summary | safe }}</span><button class = "read_btn">read more</button>
                 </div>
         {% endif %}
 

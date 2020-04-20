@@ -56,7 +56,7 @@ def implementor(request):
 		print('search')
 	else:
 		return render(request,'html_sites/implementor.html',{})
-	address='http://spring-boot-engine:8080/implementorsearch'
+	address='http://localhost:8080/implementorsearch'
 	response = requests.get(address+request.GET.get('term'))
 	params  = {"query": request.GET.get('term')}
 	response = requests.get(address,params=params)
@@ -82,7 +82,7 @@ def definition(request):
 		print('search')
 	else:
 		return render(request,'html_sites/definition.html',{})
-	address='http://spring-boot-engine:8080/meshterms'
+	address='http://localhost:8080/meshterms'
 	medplus_address='https://wsearch.nlm.nih.gov/ws/query?db=healthTopics&term='
 	response = requests.get(address+request.GET.get('term'))
 	params  = {"query": request.GET.get('term')}
@@ -120,12 +120,27 @@ def definition(request):
 		       		summary = summary[val+4:]
 		       		continue
 		    queryset_list[i]['medplus']={'url':link,'title':title,'overview':overview,'summary':summary}
-		    # ['medplus'] = {'url':link,'title':title,'overview':overview,'summary':summary}
+	
 		   
 		    
 		except:
 			print('no medlineplus articles')
 	
+	for i in range(len(queryset_list)):
+		wiki_address = 'http://localhost:8080/wiki'
+		params  = {"query": queryset_list[i]['term']}
+		response = requests.get(wiki_address,params=params)
+		response.raise_for_status()
+		wiki_result = response.json()[0]['text']
+		wiki_result_overview=wiki_result[:100]
+		wiki_result= wiki_result[100:]
+		queryset_list[i]['wiki'] = {'overview':wiki_result_overview,'summary':wiki_result}
+		
+
+	
+	response.raise_for_status()
+	search_results = response.json()
+
 	paginator = Paginator(queryset_list, 10)
 	page = request.GET.get('page',1)
 	queryset_list = paginator.page(page)
