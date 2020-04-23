@@ -87,54 +87,67 @@ def definition(request):
 	response = requests.get(address+request.GET.get('term'))
 	params  = {"query": request.GET.get('term')}
 	response = requests.get(address,params=params)
-	
+	wiki_address = 'http://spring-boot-engine:8080/wiki'
+	medlineplus_address = 'http://spring-boot-engine:8080/wiki'
 	response.raise_for_status()
 	search_results = response.json()
 	
 	queryset_list = search_results
 
 	for i in range(len(queryset_list)):
-	
+		# related terms
 		rel_terms_string = queryset_list[i]['related_terms'][1:-1]
-
 		rel_terms=rel_terms_string.split(",")
-	
 		for j in range(len(rel_terms)):
 			rel_terms[j] = rel_terms[j][1:-1]
 		queryset_list[i]['related_terms'] = rel_terms
-		medplus_response = requests.get(medplus_address+queryset_list[i]['term']+'&retmax=1')
-		tree = ElementTree.fromstring(medplus_response.content)
-		try:
-		    medplus_result = tree.find('list')[0]
 
-		    link=medplus_result.attrib['url']
-		    for row in medplus_result:
-		        if row.attrib['name'] == 'title':
-		            title=row.text
-		            continue
-		        if row.attrib['name'] == 'FullSummary':
-		       		summary=row.text
-		       		val = -1
-		       		val = summary.find('</p>',val+1)
-		       		overview=summary[:val+4]
-		       		summary = summary[val+4:]
-		       		continue
-		    queryset_list[i]['medplus']={'url':link,'title':title,'overview':overview,'summary':summary}
-	
-		   
-		    
-		except:
-			print('no medlineplus articles')
-	
-	for i in range(len(queryset_list)):
-		wiki_address = 'http://spring-boot-engine:8080/wiki'
+		# wikipedia 
 		params  = {"query": queryset_list[i]['term']}
 		response = requests.get(wiki_address,params=params)
 		response.raise_for_status()
-		wiki_result = response.json()[0]['text']
-		wiki_result_overview=wiki_result[:100]
-		wiki_result= wiki_result[100:]
-		queryset_list[i]['wiki'] = {'overview':wiki_result_overview,'summary':wiki_result}
+		wiki_result = response.json()[0]
+		try:
+			# only show the first 100 characters
+			wiki_result_overview=wiki_result['text'][:100]
+			wiki_result_url = wiki_result['url'].split('^_^')[1]
+			queryset_list[i]['wiki'] = {'overview':wiki_result_overview,'url':wiki_result_url}
+		except:
+			print('wikipedia text is less than 100 characters')
+
+		# medline plus
+		params  = {"query": queryset_list[i]['term']}
+		response = requests.get(wiki_address,params=params)
+		response.raise_for_status()
+		medlineplus_result = response.json()[0]
+		try:
+			medlineplus_overview=medlineplus_result['text'][:100]
+			medlineplus_after = medlineplus_result['text'][100:]
+			queryset_list[i]['medlineplus'] = {'overview':medlineplus_overview,'after':medlineplus_after}
+		except:
+			print('medlineplus text is less than 100 characters')
+
+		# medplus_response = requests.get(medplus_address+queryset_list[i]['term']+'&retmax=1')
+		# tree = ElementTree.fromstring(medplus_response.content)
+		# try:
+		#     medplus_result = tree.find('list')[0]
+
+		#     link=medplus_result.attrib['url']
+		#     for row in medplus_result:
+		#         if row.attrib['name'] == 'title':
+		#             title=row.text
+		#             continue
+		#         if row.attrib['name'] == 'FullSummary':
+		#        		summary=row.text
+		#        		val = -1
+		#        		val = summary.find('</p>',val+1)
+		#        		overview=summary[:val+4]
+		#        		summary = summary[val+4:]
+		#        		continue
+		#     queryset_list[i]['medplus']={'url':link,'title':title,'overview':overview,'summary':summary}
+		# except:
+		# 	print('no medlineplus articles')
+
 		
 
 	
