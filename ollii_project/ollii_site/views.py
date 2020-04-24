@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import urllib.request
 import requests
+import json
 from xml.etree import ElementTree
 import time
 # Create your views here.
@@ -20,9 +21,7 @@ def help4mom(request):
 		print('search')
 	else:
 		return render(request,'html_sites/help4mom.html',{})
-
 	address='https://wsearch.nlm.nih.gov/ws/query?db=healthTopics&term='
-
 	response = requests.get(address+request.GET.get('term')+'&retmax=35')
 	tree = ElementTree.fromstring(response.content)
 	f_results=[]
@@ -64,7 +63,7 @@ def implementor(request):
 	response.raise_for_status()
 	search_results = response.json()
 	print(search_results)
-	
+
 	queryset_list = search_results
 	paginator = Paginator(queryset_list, 10)
 	page = request.GET.get('page',1)
@@ -82,91 +81,89 @@ def definition(request):
 		print('search')
 	else:
 		return render(request,'html_sites/definition.html',{})
+	#address='http://localhost:8080/meshterms'
 	address='http://spring-boot-engine:8080/meshterms'
 	medplus_address='https://wsearch.nlm.nih.gov/ws/query?db=healthTopics&term='
 	response = requests.get(address+request.GET.get('term'))
 	params  = {"query": request.GET.get('term')}
 	response = requests.get(address,params=params)
+	#wiki_address = 'http://localhost:8080/wiki'
 	wiki_address = 'http://spring-boot-engine:8080/wiki'
-	medlineplus_address = 'http://spring-boot-engine:8080/wiki'
+	#medlineplus_address = 'http://spring-boot-engine:8080/wiki'
 	response.raise_for_status()
 	search_results = response.json()
-	
 	queryset_list = search_results
+	print('now here')
+	output_dict = [x for x in queryset_list if x['rank'] <= 5]
+	output_json = json.dumps(output_dict)
+	#queryset_list = output_json
+
+	new_query_list = []
+	counter = 0
+	for i in range(len(queryset_list)):
+		counter += 1
+		new_query_list.append(queryset_list[i])
+		if counter == 6:
+			break
+
+	print("new query list length:"+str(new_query_list))
+
+	queryset_list = new_query_list
 
 	for i in range(len(queryset_list)):
 		# related terms
+		print("valll:"+str(queryset_list[i]))
 		rel_terms_string = queryset_list[i]['related_terms'][1:-1]
 		rel_terms=rel_terms_string.split(",")
 		for j in range(len(rel_terms)):
 			rel_terms[j] = rel_terms[j][1:-1]
 		queryset_list[i]['related_terms'] = rel_terms
 
-		# wikipedia 
+		# wikipedia
 		params  = {"query": queryset_list[i]['term']}
 		response = requests.get(wiki_address,params=params)
 		response.raise_for_status()
-		wiki_result = response.json()[0]
 		try:
 			# only show the first 100 characters
+			wiki_result = response.json()[0]
 			wiki_result_overview=wiki_result['text'][:100]
 			wiki_result_url = wiki_result['url'].split('^_^')[1]
 			queryset_list[i]['wiki'] = {'overview':wiki_result_overview,'url':wiki_result_url}
 		except:
 			print('wikipedia text is less than 100 characters')
 
-		# medline plus
-		params  = {"query": queryset_list[i]['term']}
-		response = requests.get(wiki_address,params=params)
-		response.raise_for_status()
-		medlineplus_result = response.json()[0]
+		medplus_response = requests.get(medplus_address+queryset_list[i]['term']+'&retmax=1')
+		tree = ElementTree.fromstring(medplus_response.content)
 		try:
-			medlineplus_overview=medlineplus_result['text'][:100]
-			medlineplus_after = medlineplus_result['text'][100:]
-			queryset_list[i]['medlineplus'] = {'overview':medlineplus_overview,'after':medlineplus_after}
+		    medplus_result = tree.find('list')[0]
+		    link=medplus_result.attrib['url']
+		    for row in medplus_result:
+		        if row.attrib['name'] == 'title':
+		            title=row.text
+		            continue
+		        if row.attrib['name'] == 'FullSummary':
+		       		summary=row.text
+		       		val = -1
+		       		val = summary.find('</p>',val+1)
+		       		overview=summary[:val+4]
+		       		summary = summary[val+4:]
+		       		continue
+		    queryset_list[i]['medplus']={'url':link,'title':title,'overview':overview,'summary':summary}
+		    print("medplus result"+str(queryset_list[i]['medplus']))
 		except:
-			print('medlineplus text is less than 100 characters')
-
-		# medplus_response = requests.get(medplus_address+queryset_list[i]['term']+'&retmax=1')
-		# tree = ElementTree.fromstring(medplus_response.content)
-		# try:
-		#     medplus_result = tree.find('list')[0]
-
-		#     link=medplus_result.attrib['url']
-		#     for row in medplus_result:
-		#         if row.attrib['name'] == 'title':
-		#             title=row.text
-		#             continue
-		#         if row.attrib['name'] == 'FullSummary':
-		#        		summary=row.text
-		#        		val = -1
-		#        		val = summary.find('</p>',val+1)
-		#        		overview=summary[:val+4]
-		#        		summary = summary[val+4:]
-		#        		continue
-		#     queryset_list[i]['medplus']={'url':link,'title':title,'overview':overview,'summary':summary}
-		# except:
-		# 	print('no medlineplus articles')
-
-		
-
-	
+			print('no medlineplus articles')
 	response.raise_for_status()
 	search_results = response.json()
-
 	paginator = Paginator(queryset_list, 10)
 	page = request.GET.get('page',1)
 	queryset_list = paginator.page(page)
-
 	context = {
 		"results": queryset_list,
 		"title": "implementor results",
 	}
-
 	print(context)
 	print("----hellloooo-------")
 	return render(request,'html_sites/definition.html',context)
-
 
 # def definition(request):
 # 	# if 'term' in request.GET:
@@ -199,7 +196,7 @@ def definition(request):
 # 	# print(context)
 # 	# return render(request,'html_sites/definition.html',context)
 
-	
+
 # 	# if 'term' in request.GET:
 # 	#     print('s')
 # 	# else:

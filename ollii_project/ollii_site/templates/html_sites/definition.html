@@ -33,9 +33,9 @@
                     </div>
         {% endif %}
 
-        {% if result.medlineplus %}
+        {% if result.medplus %}
                 <div class="mx-2 my-2">
-                   Medline Plus: {{ result.medplus.overview | safe }}<span class ="dots">...</span><span class="more">{{ result.medlineplus.after | safe }}</span><button class = "read_btn">read more</button>
+                   Medline Plus: {{ result.medplus.overview | safe }}<span class ="dots">...</span><span class="more">{{ result.medplus.summary | safe }}</span><button class = "read_btn">read more</button>
                 </div>
         {% endif %}
 
