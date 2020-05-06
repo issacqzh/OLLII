@@ -44,6 +44,7 @@
           </div>
         </div>
         {% endif %}
+<<<<<<< HEAD
 ​
         {% if result.medplus %}
         <div class="card">
@@ -53,6 +54,13 @@
             <span class="more">{{ result.medplus.summary | safe }}</span><button class = "read_btn">read more</button>
           </div>
         </div>
+=======
+
+        {% if result.medplus %}
+                <div class="mx-2 my-2">
+                   Medline Plus: {{ result.medplus.overview | safe }}<span class ="dots">...</span><span class="more">{{ result.medplus.summary | safe }}</span><button class = "read_btn">read more</button>
+                </div>
+>>>>>>> 7e8c06aa0eeef65371928e6eaeab253a712510cf
         {% endif %}
 ​
 ​

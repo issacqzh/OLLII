@@ -124,9 +124,15 @@ def definition(request):
 		response = requests.get(wiki_address,params=params)
 		response.raise_for_status()
 		try:
+<<<<<<< HEAD
 			# only show the first 200 characters
 			wiki_result = response.json()[0]
 			wiki_result_overview=wiki_result['text'][:200]
+=======
+			# only show the first 100 characters
+			wiki_result = response.json()[0]
+			wiki_result_overview=wiki_result['text'][:100]
+>>>>>>> 7e8c06aa0eeef65371928e6eaeab253a712510cf
 			wiki_result_url = wiki_result['url'].split('^_^')[1]
 			queryset_list[i]['wiki'] = {'overview':wiki_result_overview,'url':wiki_result_url}
 		except:
