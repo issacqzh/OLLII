@@ -12,28 +12,62 @@
 </center>
 {% if results %}
 <!-- show results -->
-<div name="results_here" id="getresults">
+<div name="results_here" id="getresults" >
     {% for result in results %}
-    <div class="card mt-4 bg-light">
+
+
+    <!-- {#    <div class="card mt-4 bg-light"> #} -->
+    <div class="mt-5 mx-3 bg-light rounded" style = "box-shadow: 0 0.75rem 0.75rem rgba(0, 0, 0, .05);">
         <div class="card-header">
             {{ result.term | safe }}
         </div>
+        <div class="card-group">
+        {% comment %}
         <div class="mx-2 my-2">
             Definition: {{ result.definition}}
         </div>
-        {% if result.related_terms|length > 2 %}
-                    <div class="mx-2 my-2">
-                      Related Terms: {% for relate in result.related_terms %}<a class="mr-1" id="related" href="{% url 'definition' %}?term={{relate}}" style="color:#212529"><u>{{ relate }}</u>  </a>{% endfor %}
-                    </div>
+        {% endcomment %}
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Definition</h5>
+            <p class="card-text">{{ result.definition}}</p>
+          </div>
+        </div>
+​
+        {% if result.wiki %}
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Wiki Example</h5>
+            <p class="card-text">{{ result.wiki.overview }}<span class ="dots">...</span><span class="more">{{ result.wiki.summary }}</span></p>
+            <a href= "{{ result.wiki.url }}" target="_blank"><button>read more</button></a>
+            
+          </div>
+        </div>
         {% endif %}
+​
         {% if result.medplus %}
-                <div class="mx-2 my-2">
-                   Summary (from MedlinePlus): {{ result.medplus.overview | safe }}<span class ="dots"></span><span class="more">{{ result.medplus.summary | safe }}</span><button class = "read_btn">read more</button>
-                </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Medline Plus</h5>
+            {{ result.medplus.overview | safe }}<span class ="dots">...</span>
+            <span class="more">{{ result.medplus.summary | safe }}</span><button class = "read_btn">read more</button>
+          </div>
+        </div>
         {% endif %}
-
-
+​
+​
+        {% if result.related_terms|length > 2 %}
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Related Terms</h5>
+            <p class="card-text">{% for relate in result.related_terms %}<a class="mr-1" id="related" href="{% url 'definition' %}?term={{relate}}" style="color:#212529"><u>{{ relate }}</u>  </a>{% endfor %}</p>
+          </div>
+        </div>
+        {% endif %}
+​
+        </div>
     </div>
+
     {% endfor %}
 </div>
 <div>
